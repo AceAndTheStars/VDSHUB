@@ -1,8 +1,6 @@
--- Autofarm.lua
+-- Autofarm.lua (fixed version – upload this to GitHub)
 return function(Window, NebulaIcons)
-    local TabSection = Window:CreateTabSection("Main")  -- or however you want to group
-
-    local AutofarmTab = TabSection:CreateTab({
+    local AutofarmTab = Window:CreateTab({
         Name = "Autofarm",
         Icon = NebulaIcons:GetIcon('auto_awesome', 'Material'),
         Columns = 2,
@@ -13,8 +11,14 @@ return function(Window, NebulaIcons)
         Column = 1,
     }, "INDEX")
 
-    -- Your toggle variables
-    local toggles = { strength = false, durability = false, ... }
+    local toggles = {
+        strength = false,
+        durability = false,
+        chakra = false,
+        sword = false,
+        agility = false,
+        speed = false
+    }
 
     local function createStatToggle(name, id, varName)
         AutofarmGroup:CreateToggle({
@@ -26,7 +30,8 @@ return function(Window, NebulaIcons)
                 if Value then
                     task.spawn(function()
                         while toggles[varName] do
-                            game:GetService("ReplicatedStorage").Remotes.RemoteEvent:FireServer("Train", id)
+                            local rem = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RemoteEvent")
+                            rem:FireServer("Train", id)
                             task.wait(0.1)
                         end
                     end)
@@ -35,9 +40,10 @@ return function(Window, NebulaIcons)
         }, "INDEX")
     end
 
-    createStatToggle("Strength", 1, "strength")
+    createStatToggle("Strength",   1, "strength")
     createStatToggle("Durability", 2, "durability")
-    -- ... add the rest (Chakra=3, Sword=4, Agility=5, Speed=6)
-
-    -- You can add more groups/toggles here later (e.g. auto-quest, auto-mobs)
+    createStatToggle("Chakra",     3, "chakra")
+    createStatToggle("Sword",      4, "sword")
+    createStatToggle("Agility",    5, "agility")
+    createStatToggle("Speed",      6, "speed")
 end
