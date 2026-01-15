@@ -49,7 +49,7 @@ end
 
 -- Check key
 if _G.Key == nil or _G.Key == "" or not table.find(validKeys, _G.Key) then
-    game.Players.LocalPlayer:Kick("Invalid or expired key. Get your key from Sorbei.")
+    game.Players.LocalPlayer:Kick("Invalid or expired key. Get your key from VisualDoggyStudios.")
     return
 end
 
