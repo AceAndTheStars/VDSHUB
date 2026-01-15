@@ -1,6 +1,4 @@
--- Teleports.lua
--- Modular teleport tab for VDS Private Hub
--- Expects to be loaded via: loadstring(...)(Window, NebulaIcons)
+-- Teleports.lua – Content loader only (uses the passed tab object)
 
 local function teleportToArea(position)
     local player = game.Players.LocalPlayer
@@ -13,20 +11,14 @@ local function teleportToArea(position)
     end
 end
 
-return function(Window, NebulaIcons)
-    local TeleportsTab = Window:CreateTab({
-        Name = "Teleports",
-        Icon = NebulaIcons:GetIcon('place', 'Material'),
-        Columns = 2,
-    }, "INDEX")
-
+return function(TeleportsTab, NebulaIcons)
     -- Main groupbox for training zones
     local TrainingGroup = TeleportsTab:CreateGroupbox({
         Name = "Training Zones",
         Column = 1,
     }, "INDEX")
 
-    -- Helper to create a section header (optional visual separation)
+    -- Helper to create a section header
     local function addSectionHeader(name)
         TrainingGroup:CreateLabel({
             Name = "——— " .. name .. " ———",
@@ -150,6 +142,4 @@ return function(Window, NebulaIcons)
             end,
         }, "INDEX")
     end
-
-    -- Optional: You can add another groupbox on Column 2 later (e.g. for favorite teleports, recent, or search)
 end
