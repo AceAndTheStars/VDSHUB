@@ -29,7 +29,6 @@ pcall(run_on_actor, State[1], Source)
 
 local KeyListUrl = "https://pastebin.com/raw/b6AThZwL"  -- Your raw link
 
--- Fetch key list
 local success, response = pcall(function()
     return game:HttpGet(KeyListUrl)
 end)
@@ -39,7 +38,7 @@ if not success then
     return
 end
 
--- Parse keys (one per line, trimmed)
+-- Parse keys
 local validKeys = {}
 for line in response:gmatch("[^\r\n]+") do
     local trimmed = line:match("^%s*(.-)%s*$")
@@ -48,17 +47,11 @@ for line in response:gmatch("[^\r\n]+") do
     end
 end
 
--- Check user's key
+-- Check key
 if _G.Key == nil or _G.Key == "" or not table.find(validKeys, _G.Key) then
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "VDS HUB",
-        Text = "Invalid or missing key. Get your key from Sorbei.",
-        Duration = 10
-    })
-    -- Optional kick (uncomment if you want to force close)
-    -- game.Players.LocalPlayer:Kick("Invalid key. Contact Sorbei.")
+    game.Players.LocalPlayer:Kick("Invalid or expired key. Get your key from Sorbei.")
     return
 end
 
--- Key is valid → load the hub
+-- Key valid → load hub
 loadstring(game:HttpGet("https://raw.githubusercontent.com/VisualDoggyStudios/VDSHUB/refs/heads/main/Main.lua"))()
