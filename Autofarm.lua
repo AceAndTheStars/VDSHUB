@@ -1,4 +1,4 @@
--- Autofarm.lua (fixed version – upload this to GitHub)
+-- Autofarm.lua – Updated to remove non-existent CreateTabSection
 return function(Window, NebulaIcons)
     local AutofarmTab = Window:CreateTab({
         Name = "Autofarm",
@@ -20,6 +20,10 @@ return function(Window, NebulaIcons)
         speed = false
     }
 
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local Remotes = ReplicatedStorage:WaitForChild("Remotes", 10)  -- timeout safety
+    local RemoteEvent = Remotes and Remotes:WaitForChild("RemoteEvent", 5)
+
     local function createStatToggle(name, id, varName)
         AutofarmGroup:CreateToggle({
             Name = "Auto " .. name,
@@ -27,14 +31,17 @@ return function(Window, NebulaIcons)
             Style = 2,
             Callback = function(Value)
                 toggles[varName] = Value
-                if Value then
+                if Value and RemoteEvent then
                     task.spawn(function()
                         while toggles[varName] do
-                            local rem = game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("RemoteEvent")
-                            rem:FireServer("Train", id)
+                            pcall(function()
+                                RemoteEvent:FireServer("Train", id)
+                            end)
                             task.wait(0.1)
                         end
                     end)
+                elseif Value then
+                    warn("RemoteEvent not found for Auto " .. name)
                 end
             end,
         }, "INDEX")
